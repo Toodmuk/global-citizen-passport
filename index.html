@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Citizen Passport — EF Prototype</title>
+<meta name="description" content="Interactive prototype of the EF Global Citizen Passport — a measurable, lifelong journey. Some things can't be downloaded.">
+<style>
+  :root{
+    --navy:#142A5C; --navy2:#1B3A7A; --blue:#1F4E9B; --cyan:#1C8AD1;
+    --red:#D31F2B; --ink:#1A1A1A; --grey:#555; --lgrey:#8C8C8C;
+    --paper:#F4F6F9; --lblue:#EAF1FA; --lred:#FDECEC; --green:#1E8E3E;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--navy);color:var(--ink);-webkit-font-smoothing:antialiased}
+  .wrap{max-width:520px;margin:0 auto;padding:0 18px 60px}
+
+  /* hero */
+  .hero{padding:42px 0 26px;text-align:center;color:#fff}
+  .efchip{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px}
+  .efbox{background:var(--red);color:#fff;font-weight:800;font-size:14px;padding:4px 9px;border-radius:6px;letter-spacing:.5px}
+  .eyebrow{font-size:10.5px;letter-spacing:2px;color:#9FB6DE;text-transform:uppercase}
+  h1{font-size:clamp(30px,8vw,42px);line-height:1.04;letter-spacing:-.5px}
+  .tag{margin-top:12px;font-style:italic;color:var(--cyan);font-size:16px}
+  .sub{margin-top:8px;color:#C9D8F0;font-size:13px;line-height:1.5}
+  .cta{margin-top:22px;display:inline-block;background:var(--red);color:#fff;font-weight:700;
+       padding:13px 26px;border-radius:999px;border:none;font-size:15px;cursor:pointer;
+       box-shadow:0 6px 20px rgba(211,31,43,.35);transition:transform .15s}
+  .cta:active{transform:scale(.96)}
+
+  /* passport card */
+  .passport{background:linear-gradient(160deg,var(--navy2),#0F2447);border:1.5px solid var(--cyan);
+            border-radius:18px;padding:24px 22px;color:#fff;margin-top:10px;
+            box-shadow:0 18px 50px rgba(0,0,0,.4)}
+  .p-head{display:flex;justify-content:space-between;align-items:flex-start}
+  .p-title{font-size:15px;font-weight:800;letter-spacing:1.5px;line-height:1.25}
+  .p-title small{display:block;font-weight:400;color:#9FB6DE;font-size:10px;letter-spacing:2px;margin-top:3px}
+  .rule{height:3px;width:64px;background:var(--red);border-radius:2px;margin:14px 0}
+  .holder{display:flex;gap:14px;align-items:center}
+  .avatar{width:54px;height:54px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;
+          justify-content:center;font-weight:800;font-size:20px;color:#fff;flex-shrink:0}
+  .holder b{font-size:15px}
+  .holder span{display:block;color:#9FB6DE;font-size:11.5px;margin-top:2px}
+  .gci-line{margin-top:18px;background:rgba(255,255,255,.07);border-radius:12px;padding:14px 16px;
+            display:flex;justify-content:space-between;align-items:center}
+  .gci-line .lab{font-size:10px;letter-spacing:1.5px;color:#9FB6DE}
+  .gci-num{font-size:34px;font-weight:800;color:var(--cyan);line-height:1}
+  .gci-num small{font-size:12px;color:#9FB6DE;font-weight:400}
+  .stamps{display:flex;gap:10px;margin-top:18px;justify-content:space-between}
+  .stamp{width:72px;height:72px;border-radius:50%;border:2px dashed rgba(255,255,255,.35);
+         display:flex;flex-direction:column;align-items:center;justify-content:center;
+         font-size:9.5px;font-weight:700;letter-spacing:.5px;color:#9FB6DE;position:relative;
+         transition:all .3s;flex-shrink:0}
+  .stamp .ico{font-size:18px;margin-bottom:2px;filter:grayscale(1);opacity:.5;transition:all .3s}
+  .stamp.done{border:2.5px solid var(--cyan);color:#fff;transform:rotate(-6deg);
+              background:rgba(28,138,209,.18);box-shadow:0 0 0 3px rgba(28,138,209,.15)}
+  .stamp.done .ico{filter:none;opacity:1}
+  .stamp.done::after{content:"✓";position:absolute;top:-6px;right:-4px;background:var(--red);color:#fff;
+                     width:20px;height:20px;border-radius:50%;font-size:11px;display:flex;
+                     align-items:center;justify-content:center;transform:rotate(6deg)}
+
+  /* sections */
+  section{background:#fff;border-radius:20px 20px 0 0;margin-top:26px}
+  .inner{max-width:520px;margin:0 auto;padding:34px 18px 10px}
+  h2{font-size:13px;letter-spacing:2px;color:var(--red);text-transform:uppercase}
+  h3{font-size:22px;color:var(--navy);margin-top:6px;line-height:1.2}
+  .lead{color:var(--grey);font-size:14px;line-height:1.55;margin-top:8px}
+
+  /* journey cards */
+  .stage{border:1px solid #E3E9F2;border-radius:14px;padding:18px;margin-top:14px;background:var(--paper);
+         transition:all .3s}
+  .stage.done{border-color:var(--cyan);background:var(--lblue)}
+  .s-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .s-name{font-weight:800;font-size:15px;letter-spacing:1px}
+  .s-1 .s-name{color:var(--cyan)} .s-2 .s-name{color:var(--navy)}
+  .s-3 .s-name{color:var(--blue)} .s-4 .s-name{color:var(--red)}
+  .s-what{font-size:13px;color:var(--ink);margin-top:8px;line-height:1.5}
+  .s-what b{color:var(--navy)}
+  .s-skill{font-size:11px;color:var(--lgrey);margin-top:8px}
+  .stampbtn{background:var(--navy);color:#fff;border:none;border-radius:999px;padding:9px 16px;
+            font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s}
+  .stampbtn:disabled{background:var(--green);cursor:default}
+  .stampbtn:not(:disabled):active{transform:scale(.95)}
+
+  /* GCI panel */
+  .skillrow{margin-top:16px}
+  .skillrow .top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--navy)}
+  .skillrow .lvl{color:var(--lgrey);font-weight:400}
+  .bar{height:10px;background:#E8EDF5;border-radius:6px;margin-top:6px;overflow:hidden;position:relative}
+  .fill{height:100%;border-radius:6px;width:30%;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+  .f1{background:var(--cyan)} .f2{background:var(--blue)} .f3{background:var(--red)}
+  .pre-note{font-size:10.5px;color:var(--lgrey);margin-top:5px}
+  .legend{display:flex;justify-content:space-between;font-size:9.5px;color:#B6BFCC;margin-top:4px;letter-spacing:.5px}
+
+  /* download failed */
+  .dl{background:var(--navy);border-radius:14px;padding:18px;margin-top:16px;color:#fff;
+      font-family:Consolas,monospace;font-size:13px}
+  .dl .file{color:var(--cyan)}
+  .dl .prog{height:8px;background:rgba(255,255,255,.12);border-radius:4px;margin:12px 0;overflow:hidden}
+  .dl .prog i{display:block;height:100%;width:0;background:var(--cyan);border-radius:4px}
+  .dl .fail{color:#FF7B85;font-weight:700}
+  .dl .ok{color:#9FB6DE;font-style:italic;font-family:'Segoe UI',sans-serif;margin-top:8px;font-size:12.5px}
+
+  /* flywheel */
+  .fly{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center;justify-content:center}
+  .fnode{background:var(--lblue);color:var(--navy);font-size:11.5px;font-weight:700;
+         padding:9px 12px;border-radius:10px;text-align:center}
+  .farrow{color:var(--red);font-weight:800}
+
+  footer{background:#0F2447;color:#9FB6DE;text-align:center;padding:30px 20px 40px;font-size:11px;line-height:1.7}
+  footer b{color:#fff}
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--red);
+         color:#fff;font-weight:700;font-size:13px;padding:11px 22px;border-radius:999px;opacity:0;
+         transition:all .35s;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:50;white-space:nowrap}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="efchip"><span class="efbox">EF</span><span class="eyebrow">Education First · SCC 2026 Prototype</span></div>
+    <h1>GLOBAL CITIZEN<br>PASSPORT</h1>
+    <div class="tag">“Some things can’t be downloaded.”</div>
+    <div class="sub">A lifelong, measurable journey from first spark to global citizen.<br>Tap through the four stages and watch the GCI grow.</div>
+    <button class="cta" onclick="document.getElementById('journey').scrollIntoView({behavior:'smooth'})">Open the demo passport ↓</button>
+  </div>
+
+  <!-- PASSPORT CARD -->
+  <div class="passport" id="passport">
+    <div class="p-head">
+      <div class="p-title">GLOBAL CITIZEN PASSPORT<small>ISSUED BY EF EDUCATION FIRST · Nº TH-2026-0117</small></div>
+    </div>
+    <div class="rule"></div>
+    <div class="holder">
+      <div class="avatar">P</div>
+      <div><b>Praew T.</b><span>19 · Bangkok, Thailand · Aspirant</span></div>
+    </div>
+    <div class="gci-line">
+      <div>
+        <div class="lab">GLOBAL CITIZENSHIP INDEX</div>
+        <div class="gci-num"><span id="gci">42</span><small> / 100</small></div>
+      </div>
+      <div style="text-align:right;font-size:11px;color:#9FB6DE" id="gci-note">baseline · scored pre-departure</div>
+    </div>
+    <div class="stamps">
+      <div class="stamp" id="st0"><span class="ico">⚡</span>SPARK</div>
+      <div class="stamp" id="st1"><span class="ico">✈️</span>IMMERSE</div>
+      <div class="stamp" id="st2"><span class="ico">🛠️</span>APPLY</div>
+      <div class="stamp" id="st3"><span class="ico">🌏</span>BELONG</div>
+    </div>
+  </div>
+</div>
+
+<!-- JOURNEY -->
+<section id="journey">
+  <div class="inner">
+    <h2>The journey</h2>
+    <h3>Four stages turn exposure into ability.</h3>
+    <p class="lead">Each stage earns a stamp — and moves the needle on three skills no app can teach: adaptability, cultural awareness, and confident communication.</p>
+
+    <div class="stage s-1" id="card0">
+      <div class="s-top"><span class="s-name">1 · SPARK</span><button class="stampbtn" onclick="stamp(0)">Stamp it</button></div>
+      <div class="s-what"><b>The Global Citizen Challenge.</b> Take the free EF SET at your school, complete one real-world cultural task, and receive your physical Passport with its first stamp.</div>
+      <div class="s-skill">Skill unlocked: curiosity & self-assessment · KPI: EF SET starts</div>
+    </div>
+
+    <div class="stage s-2" id="card1">
+      <div class="s-top"><span class="s-name">2 · IMMERSE</span><button class="stampbtn" onclick="stamp(1)">Stamp it</button></div>
+      <div class="s-what"><b>The real experience.</b> A language camp, long stay, or academic year at EF’s own campuses — GCI scored before and after. This is the part that can’t be downloaded.</div>
+      <div class="s-skill">Skills built: all three, for real · KPI: weeks, GCI delta</div>
+    </div>
+
+    <div class="stage s-3" id="card2">
+      <div class="s-top"><span class="s-name">3 · APPLY</span><button class="stampbtn" onclick="stamp(2)">Stamp it</button></div>
+      <div class="s-what"><b>‘Bring It Home.’</b> A four-week micro-project back in Thailand — run an English activity, host a cultural exchange — ending in a showcase. Evidence goes into the Passport.</div>
+      <div class="s-skill">Skill cemented: confident communication · KPI: completion</div>
+    </div>
+
+    <div class="stage s-4" id="card3">
+      <div class="s-top"><span class="s-name">4 · BELONG</span><button class="stampbtn" onclick="stamp(3)">Stamp it</button></div>
+      <div class="s-what"><b>EF Global Citizens — for life.</b> Mentor the next cohort, access scholarships and the global career network, meet at the annual Bangkok summit. The journey never ends.</div>
+      <div class="s-skill">Mindset: lifelong learning · KPI: engagement, referrals</div>
+    </div>
+  </div>
+
+  <!-- GCI -->
+  <div class="inner">
+    <h2>The measurement</h2>
+    <h3>You can’t manage what you can’t measure.</h3>
+    <p class="lead">EF scores English with the EPI. The <b>Global Citizenship Index</b> does the same for global readiness — observable behaviours, scored pre and post.</p>
+
+    <div class="skillrow"><div class="top"><span>Adaptability</span><span class="lvl" id="l0">L2 · Emerging</span></div>
+      <div class="bar"><div class="fill f1" id="b0" style="width:32%"></div></div>
+      <div class="legend"><span>L1 NOVICE</span><span>L2</span><span>L3</span><span>L4 GLOBAL-READY</span></div></div>
+    <div class="skillrow"><div class="top"><span>Cultural awareness</span><span class="lvl" id="l1">L1 · Novice</span></div>
+      <div class="bar"><div class="fill f2" id="b1" style="width:22%"></div></div></div>
+    <div class="skillrow"><div class="top"><span>Confident communication</span><span class="lvl" id="l2">L2 · Emerging</span></div>
+      <div class="bar"><div class="fill f3" id="b2" style="width:28%"></div></div>
+      <div class="pre-note" id="scorenote">● Baseline scored at SPARK — stamp the journey above to see growth.</div></div>
+  </div>
+
+  <!-- DOWNLOAD FAILED -->
+  <div class="inner">
+    <h2>Why it works</h2>
+    <h3>Try downloading this.</h3>
+    <div class="dl">
+      <div>⬇ <span class="file" id="dlfile">osaka_market_smell.exp</span></div>
+      <div class="prog"><i id="dlbar"></i></div>
+      <div class="fail" id="dlmsg">​</div>
+      <div class="ok">Apps teach the words. The world teaches the rest — reading a room, surviving a strange city, building trust across difference.</div>
+    </div>
+    <button class="cta" style="margin-top:14px;width:100%" onclick="tryDownload()">Download the experience</button>
+  </div>
+
+  <!-- FLYWHEEL -->
+  <div class="inner" style="padding-bottom:36px">
+    <h2>The flywheel</h2>
+    <h3>Every graduate powers the next.</h3>
+    <p class="lead">Alumni mentor and refer the next cohort — so acquiring each new student gets cheaper as the community grows. One trip becomes a trajectory; a customer becomes a member.</p>
+    <div class="fly">
+      <span class="fnode">Alumni advocate</span><span class="farrow">→</span>
+      <span class="fnode">High-quality referrals</span><span class="farrow">→</span>
+      <span class="fnode">Lower acquisition cost</span><span class="farrow">→</span>
+      <span class="fnode">More global citizens</span><span class="farrow">↺</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <b>From Trip to Trajectory</b> — a strategy prototype for the EF Education First track,<br>
+  Thailand Social Case Competition 2026.<br>
+  Illustrative demo · data & scoring for demonstration only · not an official EF product.
+</footer>
+
+<div class="toast" id="toast">Stamp earned! ✓</div>
+
+<script>
+  var done=[false,false,false,false];
+  var gci=42;
+  // per-stage effects: gci gain + bar widths + level labels
+  var fx=[
+    {g:6,  b:[38,30,34], l:["L2 · Emerging","L2 · Emerging","L2 · Emerging"], note:"● SPARK scored — the journey begins."},
+    {g:22, b:[62,58,60], l:["L3 · Proficient","L3 · Proficient","L3 · Proficient"], note:"● Mid-journey scoring after IMMERSE."},
+    {g:8,  b:[72,66,78], l:["L3 · Proficient","L3 · Proficient","L4 · Global-ready"], note:"● APPLY evidence added to the Passport."},
+    {g:0,  b:[80,74,84], l:["L4 · Global-ready","L3+ · Proficient","L4 · Global-ready"], note:"○ Post-journey GCI: growth is proven, not promised."}
+  ];
+  function stamp(i){
+    if(done[i]) return;
+    // enforce order gently
+    for(var k=0;k<i;k++){ if(!done[k]){ toast("Start with stage "+(k+1)+" — the journey is a ladder!"); return; } }
+    done[i]=true;
+    document.getElementById('st'+i).classList.add('done');
+    document.getElementById('card'+i).classList.add('done');
+    var btn=document.querySelectorAll('.stampbtn')[i];
+    btn.disabled=true; btn.textContent="Stamped ✓";
+    // animate GCI
+    var target=gci+fx[i].g; if(i===3){target=84;}
+    animateGci(gci,target); gci=target;
+    for(var j=0;j<3;j++){
+      document.getElementById('b'+j).style.width=fx[i].b[j]+"%";
+      document.getElementById('l'+j).textContent=fx[i].l[j];
+    }
+    document.getElementById('scorenote').textContent=fx[i].note;
+    if(i===1){document.getElementById('gci-note').textContent="re-scored after immersion";}
+    if(i===3){document.getElementById('gci-note').textContent="lifelong member · keeps growing";}
+    toast(i===3 ? "Journey complete — welcome to EF Global Citizens 🌏" : "Stamp earned! ✓");
+    if(i===3){ setTimeout(function(){document.getElementById('passport').scrollIntoView({behavior:'smooth',block:'center'});},600); }
+  }
+  function animateGci(from,to){
+    var el=document.getElementById('gci'); var t0=null;
+    function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/900,1);
+      el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));
+      if(p<1)requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  var toastTimer=null;
+  function toast(msg){
+    var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show');},2200);
+  }
+  var files=["osaka_market_smell.exp","first_conversation_in_french.exp","getting_lost_then_found.exp","homestay_family_dinner.exp"];
+  var fidx=0, dling=false;
+  function tryDownload(){
+    if(dling) return; dling=true;
+    var bar=document.getElementById('dlbar'), msg=document.getElementById('dlmsg');
+    msg.textContent="​"; bar.style.transition="width 1.4s ease"; bar.style.width="86%";
+    setTimeout(function(){
+      bar.style.transition="width .15s"; bar.style.width="0%";
+      msg.textContent="Download failed — only available in person.";
+      fidx=(fidx+1)%files.length; document.getElementById('dlfile').textContent=files[fidx];
+      dling=false;
+    },1500);
+  }
+</script>
+</body>
+</html>
