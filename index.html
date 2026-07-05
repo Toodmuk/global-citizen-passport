@@ -2,295 +2,560 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Global Citizen Passport — EF Prototype</title>
 <meta name="description" content="Interactive prototype of the EF Global Citizen Passport — a measurable, lifelong journey. Some things can't be downloaded.">
+<meta name="theme-color" content="#0B1E45">
+<meta property="og:title" content="Global Citizen Passport — EF Prototype">
+<meta property="og:description" content="Stamp the journey. Watch the GCI grow. Some things can't be downloaded.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛂</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#142A5C; --navy2:#1B3A7A; --blue:#1F4E9B; --cyan:#1C8AD1;
-    --red:#D31F2B; --ink:#1A1A1A; --grey:#555; --lgrey:#8C8C8C;
-    --paper:#F4F6F9; --lblue:#EAF1FA; --lred:#FDECEC; --green:#1E8E3E;
+    --bg:#0B1E45; --bg2:#081634; --navy:#142A5C; --navy2:#1B3A7A;
+    --cyan:#38B6FF; --cyan-deep:#1C8AD1; --red:#E23744; --red-deep:#D31F2B;
+    --gold:#D4AF6A; --green:#3DD68C;
+    --ink:#EAF1FB; --sub:#9FB6DE; --faint:#5E76A8;
+    --glass:rgba(255,255,255,.055); --glass-line:rgba(255,255,255,.12);
+    --disp:'Space Grotesk',system-ui,sans-serif;
+    --body:'Inter',system-ui,sans-serif;
+    --mono:'JetBrains Mono',Consolas,monospace;
+    --ease:cubic-bezier(.22,.9,.3,1.2); --ease-out:cubic-bezier(.16,1,.3,1);
   }
   *{margin:0;padding:0;box-sizing:border-box}
-  body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--navy);color:var(--ink);-webkit-font-smoothing:antialiased}
-  .wrap{max-width:520px;margin:0 auto;padding:0 18px 60px}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--bg);color:var(--ink);
+       -webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100dvh}
+  ::selection{background:var(--red);color:#fff}
 
-  /* hero */
-  .hero{padding:42px 0 26px;text-align:center;color:#fff}
-  .efchip{display:inline-flex;align-items:center;gap:8px;margin-bottom:18px}
-  .efbox{background:var(--red);color:#fff;font-weight:800;font-size:14px;padding:4px 9px;border-radius:6px;letter-spacing:.5px}
-  .eyebrow{font-size:10.5px;letter-spacing:2px;color:#9FB6DE;text-transform:uppercase}
-  h1{font-size:clamp(30px,8vw,42px);line-height:1.04;letter-spacing:-.5px}
-  .tag{margin-top:12px;font-style:italic;color:var(--cyan);font-size:16px}
-  .sub{margin-top:8px;color:#C9D8F0;font-size:13px;line-height:1.5}
-  .cta{margin-top:22px;display:inline-block;background:var(--red);color:#fff;font-weight:700;
-       padding:13px 26px;border-radius:999px;border:none;font-size:15px;cursor:pointer;
-       box-shadow:0 6px 20px rgba(211,31,43,.35);transition:transform .15s}
+  /* ---------- aurora background ---------- */
+  .sky{position:fixed;inset:0;z-index:-2;background:
+       radial-gradient(60% 50% at 20% 10%, rgba(28,138,209,.32), transparent 60%),
+       radial-gradient(50% 40% at 85% 20%, rgba(211,31,43,.20), transparent 60%),
+       radial-gradient(70% 60% at 50% 110%, rgba(27,58,122,.9), transparent 70%),
+       linear-gradient(180deg,#0B1E45 0%,#081634 100%)}
+  .blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.5;z-index:-1;
+        will-change:transform;pointer-events:none}
+  .b1{width:52vw;height:52vw;max-width:560px;max-height:560px;left:-14vw;top:-10vh;
+      background:radial-gradient(circle,#1C8AD1 0%,transparent 65%);animation:drift1 26s ease-in-out infinite alternate}
+  .b2{width:44vw;height:44vw;max-width:480px;max-height:480px;right:-16vw;top:22vh;
+      background:radial-gradient(circle,#D31F2B 0%,transparent 65%);opacity:.28;animation:drift2 32s ease-in-out infinite alternate}
+  @keyframes drift1{from{transform:translate(0,0) scale(1)}to{transform:translate(9vw,7vh) scale(1.15)}}
+  @keyframes drift2{from{transform:translate(0,0) scale(1)}to{transform:translate(-8vw,-6vh) scale(1.12)}}
+  .grain{position:fixed;inset:0;z-index:-1;opacity:.05;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E")}
+
+  .wrap{max-width:560px;margin:0 auto;padding:0 20px}
+
+  /* ---------- hero ---------- */
+  .hero{padding:clamp(44px,9vh,84px) 0 30px;text-align:center}
+  .chip{display:inline-flex;align-items:center;gap:9px;padding:7px 14px 7px 8px;
+        border:1px solid var(--glass-line);border-radius:999px;background:var(--glass);
+        backdrop-filter:blur(8px);margin-bottom:26px;animation:rise .7s var(--ease-out) both}
+  .efbox{background:var(--red-deep);color:#fff;font-weight:800;font-size:12.5px;
+         font-family:var(--disp);padding:3px 8px;border-radius:7px;letter-spacing:.5px}
+  .chip span{font-size:10.5px;letter-spacing:2.2px;color:var(--sub);text-transform:uppercase;font-weight:600}
+  h1{font-family:var(--disp);font-size:clamp(38px,10.5vw,58px);line-height:.98;
+     letter-spacing:-1.5px;font-weight:700;animation:rise .7s .08s var(--ease-out) both}
+  h1 .grad{background:linear-gradient(92deg,#fff 10%,var(--cyan) 55%,#8ED3FF 90%);
+     -webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{margin-top:18px;font-style:italic;font-size:clamp(15px,4.2vw,18px);color:var(--sub);
+       animation:rise .7s .16s var(--ease-out) both;position:relative;display:inline-block}
+  .tag b{color:#fff;font-weight:600}
+  .tag::after{content:"";position:absolute;left:0;bottom:-6px;height:2px;width:100%;
+       background:linear-gradient(90deg,transparent,var(--red),transparent);opacity:.8}
+  .sub{margin-top:20px;color:var(--sub);font-size:13.5px;line-height:1.6;
+       animation:rise .7s .22s var(--ease-out) both}
+  .cta{margin-top:28px;display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--red) 0%,var(--red-deep) 100%);
+       color:#fff;font-weight:700;font-family:var(--disp);font-size:15.5px;padding:15px 30px;
+       border-radius:999px;border:none;cursor:pointer;min-height:48px;
+       box-shadow:0 10px 34px rgba(211,31,43,.42),inset 0 1px 0 rgba(255,255,255,.25);
+       transition:transform .18s var(--ease),box-shadow .18s;animation:rise .7s .3s var(--ease-out) both}
   .cta:active{transform:scale(.96)}
+  @media(hover:hover){.cta:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(211,31,43,.5),inset 0 1px 0 rgba(255,255,255,.25)}}
+  @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 
-  /* passport card */
-  .passport{background:linear-gradient(160deg,var(--navy2),#0F2447);border:1.5px solid var(--cyan);
-            border-radius:18px;padding:24px 22px;color:#fff;margin-top:10px;
-            box-shadow:0 18px 50px rgba(0,0,0,.4)}
-  .p-head{display:flex;justify-content:space-between;align-items:flex-start}
-  .p-title{font-size:15px;font-weight:800;letter-spacing:1.5px;line-height:1.25}
-  .p-title small{display:block;font-weight:400;color:#9FB6DE;font-size:10px;letter-spacing:2px;margin-top:3px}
-  .rule{height:3px;width:64px;background:var(--red);border-radius:2px;margin:14px 0}
-  .holder{display:flex;gap:14px;align-items:center}
-  .avatar{width:54px;height:54px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;
-          justify-content:center;font-weight:800;font-size:20px;color:#fff;flex-shrink:0}
-  .holder b{font-size:15px}
-  .holder span{display:block;color:#9FB6DE;font-size:11.5px;margin-top:2px}
-  .gci-line{margin-top:18px;background:rgba(255,255,255,.07);border-radius:12px;padding:14px 16px;
-            display:flex;justify-content:space-between;align-items:center}
-  .gci-line .lab{font-size:10px;letter-spacing:1.5px;color:#9FB6DE}
-  .gci-num{font-size:34px;font-weight:800;color:var(--cyan);line-height:1}
-  .gci-num small{font-size:12px;color:#9FB6DE;font-weight:400}
-  .stamps{display:flex;gap:10px;margin-top:18px;justify-content:space-between}
-  .stamp{width:72px;height:72px;border-radius:50%;border:2px dashed rgba(255,255,255,.35);
-         display:flex;flex-direction:column;align-items:center;justify-content:center;
-         font-size:9.5px;font-weight:700;letter-spacing:.5px;color:#9FB6DE;position:relative;
-         transition:all .3s;flex-shrink:0}
-  .stamp .ico{font-size:18px;margin-bottom:2px;filter:grayscale(1);opacity:.5;transition:all .3s}
-  .stamp.done{border:2.5px solid var(--cyan);color:#fff;transform:rotate(-6deg);
-              background:rgba(28,138,209,.18);box-shadow:0 0 0 3px rgba(28,138,209,.15)}
+  /* ---------- passport ---------- */
+  .stage3d{perspective:1200px;margin-top:34px;animation:rise .8s .4s var(--ease-out) both}
+  .passport{position:relative;border-radius:22px;padding:26px 24px 20px;color:#fff;
+    background:linear-gradient(155deg,#1D3D80 0%,#122a5e 55%,#0d2049 100%);
+    border:1px solid rgba(212,175,106,.45);
+    box-shadow:0 30px 80px rgba(0,0,0,.55),0 2px 0 rgba(212,175,106,.25) inset,0 0 0 1px rgba(255,255,255,.04) inset;
+    transform-style:preserve-3d;transition:transform .25s var(--ease-out);overflow:hidden;
+    will-change:transform}
+  .passport::before{ /* guilloche */
+    content:"";position:absolute;inset:-40%;opacity:.14;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Cg fill='none' stroke='%238ED3FF' stroke-width='.6'%3E%3Ccircle cx='200' cy='200' r='60'/%3E%3Ccircle cx='200' cy='200' r='90'/%3E%3Ccircle cx='200' cy='200' r='120'/%3E%3Ccircle cx='200' cy='200' r='150'/%3E%3Ccircle cx='200' cy='200' r='180'/%3E%3Ccircle cx='120' cy='120' r='70'/%3E%3Ccircle cx='280' cy='280' r='70'/%3E%3Ccircle cx='280' cy='120' r='45'/%3E%3Ccircle cx='120' cy='280' r='45'/%3E%3C/g%3E%3C/svg%3E");
+    background-size:340px}
+  .sheen{position:absolute;inset:0;pointer-events:none;border-radius:22px;
+    background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.14) 46%,rgba(142,211,255,.18) 50%,rgba(255,255,255,.10) 54%,transparent 70%);
+    transform:translateX(-120%);transition:transform .9s var(--ease-out)}
+  .passport.lit .sheen{transform:translateX(120%)}
+  .p-top{display:flex;justify-content:space-between;align-items:flex-start;position:relative}
+  .p-title{font-family:var(--disp);font-size:15px;font-weight:700;letter-spacing:2px;line-height:1.3}
+  .p-title small{display:block;font-family:var(--mono);font-weight:400;color:var(--gold);
+                 font-size:9px;letter-spacing:2.5px;margin-top:5px}
+  .seal{width:52px;height:52px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+        border:1.5px solid rgba(212,175,106,.8);color:var(--gold);font-family:var(--disp);
+        font-weight:700;font-size:15px;letter-spacing:.5px;
+        background:radial-gradient(circle at 35% 30%,rgba(212,175,106,.28),rgba(212,175,106,.05));
+        box-shadow:inset 0 0 12px rgba(212,175,106,.25)}
+  .p-rule{height:2px;margin:16px 0;background:linear-gradient(90deg,var(--gold),rgba(212,175,106,.1));border-radius:2px}
+  .holder{display:flex;gap:14px;align-items:center;position:relative}
+  .avatar{width:58px;height:58px;border-radius:14px;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+          font-family:var(--disp);font-weight:700;font-size:24px;color:#fff;
+          background:linear-gradient(135deg,var(--cyan-deep),#2456a8);
+          box-shadow:0 6px 16px rgba(28,138,209,.4)}
+  .holder b{font-size:16px;font-family:var(--disp);letter-spacing:.3px}
+  .holder span{display:block;color:var(--sub);font-size:12px;margin-top:3px}
+  .gci-row{margin-top:18px;display:flex;gap:14px;align-items:center;position:relative}
+  .ringbox{position:relative;width:92px;height:92px;flex-shrink:0}
+  .ringbox svg{transform:rotate(-90deg)}
+  .ring-bg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:7}
+  .ring-fg{fill:none;stroke:url(#ringGrad);stroke-width:7;stroke-linecap:round;
+           stroke-dasharray:264;stroke-dashoffset:153;transition:stroke-dashoffset 1.1s var(--ease-out)}
+  .ring-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .ring-num b{font-family:var(--disp);font-size:26px;line-height:1}
+  .ring-num i{font-style:normal;font-size:8.5px;color:var(--sub);letter-spacing:1.5px;margin-top:2px}
+  .gci-copy{flex:1}
+  .gci-copy .lab{font-size:9.5px;letter-spacing:2px;color:var(--gold);font-weight:600}
+  .gci-copy p{font-size:12px;color:var(--sub);line-height:1.5;margin-top:6px}
+  .gci-copy p b{color:#fff}
+  .stamps{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px;position:relative}
+  .stamp{aspect-ratio:1;border-radius:50%;border:2px dashed rgba(255,255,255,.28);
+         display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+         font-family:var(--disp);font-size:9px;font-weight:600;letter-spacing:.8px;color:var(--faint);
+         position:relative;transition:border-color .3s,color .3s}
+  .stamp .ico{font-size:17px;filter:grayscale(1);opacity:.4;transition:filter .3s,opacity .3s}
+  .stamp.done{border:2.5px solid var(--c,#38B6FF);color:#fff;animation:slam .45s var(--ease) both;
+              background:radial-gradient(circle,color-mix(in srgb,var(--c,#38B6FF) 22%,transparent),transparent 75%)}
   .stamp.done .ico{filter:none;opacity:1}
-  .stamp.done::after{content:"✓";position:absolute;top:-6px;right:-4px;background:var(--red);color:#fff;
-                     width:20px;height:20px;border-radius:50%;font-size:11px;display:flex;
-                     align-items:center;justify-content:center;transform:rotate(6deg)}
+  .stamp.done::after{content:"✓";position:absolute;top:-5px;right:-3px;width:19px;height:19px;border-radius:50%;
+        background:var(--c,#38B6FF);color:#fff;font-size:10.5px;display:flex;align-items:center;justify-content:center;
+        font-family:var(--body);box-shadow:0 2px 8px rgba(0,0,0,.4)}
+  @keyframes slam{0%{transform:scale(2.1) rotate(14deg);opacity:0}60%{transform:scale(.94) rotate(-7deg);opacity:1}100%{transform:scale(1) rotate(-6deg)}}
+  .mrz{margin-top:20px;padding:12px 14px 10px;border-radius:0 0 14px 14px;background:rgba(3,10,28,.55);
+       border-top:1.5px dashed rgba(255,255,255,.2);margin-left:-24px;margin-right:-24px;margin-bottom:-20px}
+  .mrz div{font-family:var(--mono);font-size:clamp(8.5px,2.4vw,11px);letter-spacing:1.2px;
+       color:#7FA1D8;white-space:nowrap;overflow:hidden}
+  .mrz .g{color:var(--cyan)}
 
-  /* sections */
-  section{background:#fff;border-radius:20px 20px 0 0;margin-top:26px}
-  .inner{max-width:520px;margin:0 auto;padding:34px 18px 10px}
-  h2{font-size:13px;letter-spacing:2px;color:var(--red);text-transform:uppercase}
-  h3{font-size:22px;color:var(--navy);margin-top:6px;line-height:1.2}
-  .lead{color:var(--grey);font-size:14px;line-height:1.55;margin-top:8px}
+  /* ---------- sections ---------- */
+  section{padding:56px 0 8px}
+  .eyebrow{font-family:var(--disp);font-size:11px;letter-spacing:3px;color:var(--red);
+           text-transform:uppercase;font-weight:600}
+  h2{font-family:var(--disp);font-size:clamp(24px,6.4vw,32px);letter-spacing:-.6px;
+     line-height:1.12;margin-top:10px}
+  .lead{color:var(--sub);font-size:14px;line-height:1.65;margin-top:12px}
+  .lead b{color:#fff;font-weight:600}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .6s var(--ease-out),transform .6s var(--ease-out)}
+  .reveal.in{opacity:1;transform:none}
 
-  /* journey cards */
-  .stage{border:1px solid #E3E9F2;border-radius:14px;padding:18px;margin-top:14px;background:var(--paper);
-         transition:all .3s}
-  .stage.done{border-color:var(--cyan);background:var(--lblue)}
-  .s-top{display:flex;justify-content:space-between;align-items:center;gap:10px}
-  .s-name{font-weight:800;font-size:15px;letter-spacing:1px}
-  .s-1 .s-name{color:var(--cyan)} .s-2 .s-name{color:var(--navy)}
-  .s-3 .s-name{color:var(--blue)} .s-4 .s-name{color:var(--red)}
-  .s-what{font-size:13px;color:var(--ink);margin-top:8px;line-height:1.5}
-  .s-what b{color:var(--navy)}
-  .s-skill{font-size:11px;color:var(--lgrey);margin-top:8px}
-  .stampbtn{background:var(--navy);color:#fff;border:none;border-radius:999px;padding:9px 16px;
-            font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:all .2s}
-  .stampbtn:disabled{background:var(--green);cursor:default}
-  .stampbtn:not(:disabled):active{transform:scale(.95)}
+  /* ---------- journey ---------- */
+  .rail{position:relative;margin-top:26px}
+  .rail::before{content:"";position:absolute;left:23px;top:8px;bottom:8px;width:2px;
+       background:rgba(255,255,255,.1);border-radius:2px}
+  .rail::after{content:"";position:absolute;left:23px;top:8px;width:2px;height:var(--fill,0%);
+       max-height:calc(100% - 16px);background:linear-gradient(180deg,var(--cyan),var(--red));
+       border-radius:2px;transition:height .8s var(--ease-out)}
+  .st{position:relative;padding:0 0 16px 62px}
+  .dot{position:absolute;left:12px;top:18px;width:24px;height:24px;border-radius:50%;z-index:1;
+       border:2px solid rgba(255,255,255,.25);background:var(--bg);
+       display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--faint);
+       transition:all .3s;font-family:var(--disp);font-weight:700}
+  .st.done .dot{border-color:var(--c);background:var(--c);color:#fff;box-shadow:0 0 16px color-mix(in srgb,var(--c) 60%,transparent)}
+  .card{border:1px solid var(--glass-line);border-radius:18px;padding:18px;
+        background:var(--glass);backdrop-filter:blur(10px);transition:border-color .3s,background .3s}
+  .st.done .card{border-color:color-mix(in srgb,var(--c) 55%,transparent);
+        background:color-mix(in srgb,var(--c) 7%,var(--glass))}
+  .card .top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .s-name{font-family:var(--disp);font-weight:700;font-size:16px;letter-spacing:1.2px;color:var(--c)}
+  .s-what{font-size:13px;color:var(--ink);line-height:1.55;margin-top:9px}
+  .s-what b{color:#fff}
+  .s-meta{font-size:10.5px;color:var(--faint);margin-top:9px;letter-spacing:.3px}
+  .btn{background:#fff;color:var(--bg);border:none;border-radius:999px;padding:11px 18px;
+       font-family:var(--disp);font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;
+       min-height:44px;min-width:98px;transition:transform .15s var(--ease),background .2s;letter-spacing:.3px}
+  .btn:not(:disabled):active{transform:scale(.93)}
+  .btn:disabled{background:var(--green);color:#04240f;cursor:default}
 
-  /* GCI panel */
-  .skillrow{margin-top:16px}
-  .skillrow .top{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--navy)}
-  .skillrow .lvl{color:var(--lgrey);font-weight:400}
-  .bar{height:10px;background:#E8EDF5;border-radius:6px;margin-top:6px;overflow:hidden;position:relative}
-  .fill{height:100%;border-radius:6px;width:30%;transition:width 1s cubic-bezier(.2,.8,.2,1)}
-  .f1{background:var(--cyan)} .f2{background:var(--blue)} .f3{background:var(--red)}
-  .pre-note{font-size:10.5px;color:var(--lgrey);margin-top:5px}
-  .legend{display:flex;justify-content:space-between;font-size:9.5px;color:#B6BFCC;margin-top:4px;letter-spacing:.5px}
+  /* ---------- skills ---------- */
+  .skill{margin-top:20px}
+  .skill .top{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;
+       font-weight:600;font-family:var(--disp);letter-spacing:.3px}
+  .skill .lvl{font-family:var(--mono);color:var(--sub);font-weight:400;font-size:10px;transition:color .3s}
+  .track{height:9px;background:rgba(255,255,255,.08);border-radius:6px;margin-top:8px;overflow:hidden}
+  .fill{height:100%;border-radius:6px;width:30%;transition:width 1.1s var(--ease-out);position:relative}
+  .fill::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35));
+       width:24px;left:auto;right:0;border-radius:6px}
+  .f1{background:linear-gradient(90deg,#1C8AD1,#38B6FF)}
+  .f2{background:linear-gradient(90deg,#2456A8,#5B8DEF)}
+  .f3{background:linear-gradient(90deg,#B3202B,#E23744)}
+  .ticks{display:flex;justify-content:space-between;font-family:var(--mono);font-size:8px;
+       color:var(--faint);margin-top:5px;letter-spacing:1px}
+  .scorenote{font-size:11.5px;color:var(--sub);margin-top:16px;font-style:italic}
 
-  /* download failed */
-  .dl{background:var(--navy);border-radius:14px;padding:18px;margin-top:16px;color:#fff;
-      font-family:Consolas,monospace;font-size:13px}
-  .dl .file{color:var(--cyan)}
-  .dl .prog{height:8px;background:rgba(255,255,255,.12);border-radius:4px;margin:12px 0;overflow:hidden}
-  .dl .prog i{display:block;height:100%;width:0;background:var(--cyan);border-radius:4px}
-  .dl .fail{color:#FF7B85;font-weight:700}
-  .dl .ok{color:#9FB6DE;font-style:italic;font-family:'Segoe UI',sans-serif;margin-top:8px;font-size:12.5px}
+  /* ---------- terminal ---------- */
+  .term{margin-top:22px;border-radius:16px;overflow:hidden;border:1px solid var(--glass-line);
+        box-shadow:0 20px 50px rgba(0,0,0,.4)}
+  .term-bar{display:flex;gap:6px;align-items:center;padding:11px 14px;background:rgba(255,255,255,.06)}
+  .term-bar i{width:10px;height:10px;border-radius:50%;display:block}
+  .term-bar i:nth-child(1){background:#FF5F57}.term-bar i:nth-child(2){background:#FEBC2E}.term-bar i:nth-child(3){background:#28C840}
+  .term-bar span{margin-left:8px;font-family:var(--mono);font-size:10px;color:var(--faint)}
+  .term-body{padding:18px 16px 20px;background:rgba(3,10,28,.7);font-family:var(--mono);font-size:12.5px;line-height:1.5}
+  .file{color:var(--cyan)}
+  .prog{height:9px;background:rgba(255,255,255,.1);border-radius:5px;margin:14px 0 8px;overflow:hidden}
+  .prog i{display:block;height:100%;width:0;border-radius:5px;background:linear-gradient(90deg,var(--cyan-deep),var(--cyan))}
+  .meta-line{display:flex;justify-content:space-between;font-size:10px;color:var(--faint)}
+  .failmsg{color:#FF7B85;font-weight:600;margin-top:12px;min-height:18px}
+  .oknote{color:var(--sub);font-family:var(--body);font-size:12.5px;font-style:italic;margin-top:10px;line-height:1.55}
+  .term.shake{animation:shake .4s}
+  @keyframes shake{0%,100%{transform:none}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+  .btn-ghost{margin-top:16px;width:100%;background:var(--glass);border:1px solid var(--glass-line);
+       color:#fff;border-radius:999px;padding:14px;font-family:var(--disp);font-weight:700;font-size:14px;
+       cursor:pointer;min-height:48px;transition:background .2s,transform .15s var(--ease)}
+  .btn-ghost:active{transform:scale(.97)}
 
-  /* flywheel */
-  .fly{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center;justify-content:center}
-  .fnode{background:var(--lblue);color:var(--navy);font-size:11.5px;font-weight:700;
-         padding:9px 12px;border-radius:10px;text-align:center}
-  .farrow{color:var(--red);font-weight:800}
+  /* ---------- flywheel orbit ---------- */
+  .orbitbox{position:relative;width:min(320px,84vw);aspect-ratio:1;margin:30px auto 8px}
+  .orbit-ring{position:absolute;inset:0;border:1.5px dashed rgba(255,255,255,.2);border-radius:50%;
+       animation:spin 40s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .orbit-center{position:absolute;inset:31%;border-radius:50%;display:flex;flex-direction:column;
+       align-items:center;justify-content:center;text-align:center;gap:3px;
+       background:radial-gradient(circle at 35% 30%,rgba(28,138,209,.35),rgba(11,30,69,.9));
+       border:1px solid var(--glass-line)}
+  .orbit-center b{font-family:var(--disp);font-size:13px;letter-spacing:.5px}
+  .orbit-center span{font-size:9px;color:var(--sub);letter-spacing:1px}
+  .onode{position:absolute;width:88px;padding:9px 6px;border-radius:12px;text-align:center;
+       font-size:9.5px;font-weight:600;line-height:1.3;color:#fff;
+       background:rgba(20,42,92,.92);border:1px solid var(--glass-line);
+       box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .onode i{display:block;font-style:normal;font-size:14px;margin-bottom:3px}
+  .n1{top:-4%;left:50%;transform:translateX(-50%)}
+  .n2{right:-4%;top:50%;transform:translateY(-50%)}
+  .n3{bottom:-4%;left:50%;transform:translateX(-50%)}
+  .n4{left:-4%;top:50%;transform:translateY(-50%)}
+  .orbit-cap{text-align:center;font-size:11.5px;color:var(--sub);font-style:italic;margin-top:14px}
 
-  footer{background:#0F2447;color:#9FB6DE;text-align:center;padding:30px 20px 40px;font-size:11px;line-height:1.7}
-  footer b{color:#fff}
-  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(80px);background:var(--red);
-         color:#fff;font-weight:700;font-size:13px;padding:11px 22px;border-radius:999px;opacity:0;
-         transition:all .35s;box-shadow:0 8px 24px rgba(0,0,0,.35);z-index:50;white-space:nowrap}
+  /* ---------- final + footer ---------- */
+  .final{text-align:center;padding:70px 0 40px}
+  .final h2{font-size:clamp(26px,7.4vw,38px)}
+  .final .lead{max-width:400px;margin:14px auto 0}
+  footer{border-top:1px solid var(--glass-line);margin-top:30px;padding:28px 20px calc(34px + env(safe-area-inset-bottom));
+       text-align:center;color:var(--faint);font-size:10.5px;line-height:1.8}
+  footer b{color:var(--sub)}
+
+  /* ---------- toast + confetti ---------- */
+  .toast{position:fixed;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(90px);
+       background:#fff;color:var(--bg);font-family:var(--disp);font-weight:700;font-size:13px;
+       padding:13px 24px;border-radius:999px;opacity:0;transition:all .35s var(--ease-out);
+       box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:60;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+  .confetti{position:fixed;top:-12px;z-index:55;width:9px;height:14px;border-radius:2px;pointer-events:none;
+       animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+    .blob,.orbit-ring{animation:none}
+    html{scroll-behavior:auto}
+  }
 </style>
 </head>
 <body>
+<div class="sky"></div><div class="blob b1"></div><div class="blob b2"></div><div class="grain"></div>
 
 <div class="wrap">
+  <!-- HERO -->
   <div class="hero">
-    <div class="efchip"><span class="efbox">EF</span><span class="eyebrow">Education First · SCC 2026 Prototype</span></div>
-    <h1>GLOBAL CITIZEN<br>PASSPORT</h1>
-    <div class="tag">“Some things can’t be downloaded.”</div>
-    <div class="sub">A lifelong, measurable journey from first spark to global citizen.<br>Tap through the four stages and watch the GCI grow.</div>
-    <button class="cta" onclick="document.getElementById('journey').scrollIntoView({behavior:'smooth'})">Open the demo passport ↓</button>
+    <div class="chip"><span class="efbox">EF</span><span>Education First · SCC 2026 Prototype</span></div>
+    <h1>GLOBAL CITIZEN<br><span class="grad">PASSPORT</span></h1>
+    <div class="tag">“Some things <b>can’t be downloaded</b>.”</div>
+    <p class="sub">A lifelong, measurable journey from first spark to global citizen.<br>Stamp the four stages. Watch the GCI grow.</p>
+    <button class="cta" onclick="document.getElementById('journey').scrollIntoView({behavior:'smooth'})">Begin the journey&nbsp;&nbsp;↓</button>
+
+    <!-- PASSPORT -->
+    <div class="stage3d">
+      <div class="passport" id="pp">
+        <div class="sheen"></div>
+        <div class="p-top">
+          <div class="p-title">GLOBAL CITIZEN<br>PASSPORT
+            <small>ISSUED BY EF EDUCATION FIRST · Nº TH-2026-0117</small>
+          </div>
+          <div class="seal">EF</div>
+        </div>
+        <div class="p-rule"></div>
+        <div class="holder">
+          <div class="avatar">P</div>
+          <div><b>PRAEW T.</b><span>19 · Bangkok, Thailand · The Aspirant</span></div>
+        </div>
+        <div class="gci-row">
+          <div class="ringbox">
+            <svg width="92" height="92" viewBox="0 0 92 92">
+              <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#38B6FF"/><stop offset="100%" stop-color="#E23744"/>
+              </linearGradient></defs>
+              <circle class="ring-bg" cx="46" cy="46" r="42"/>
+              <circle class="ring-fg" id="ring" cx="46" cy="46" r="42"/>
+            </svg>
+            <div class="ring-num"><b id="gci">42</b><i>GCI / 100</i></div>
+          </div>
+          <div class="gci-copy">
+            <div class="lab">GLOBAL CITIZENSHIP INDEX</div>
+            <p id="gci-note">Baseline scored pre-departure — the way <b>EF’s EPI</b> scores English, the GCI scores who you’re becoming.</p>
+          </div>
+        </div>
+        <div class="stamps">
+          <div class="stamp" id="st0" style="--c:#38B6FF"><span class="ico">⚡</span>SPARK</div>
+          <div class="stamp" id="st1" style="--c:#5B8DEF"><span class="ico">✈️</span>IMMERSE</div>
+          <div class="stamp" id="st2" style="--c:#8ED3FF"><span class="ico">🛠️</span>APPLY</div>
+          <div class="stamp" id="st3" style="--c:#E23744"><span class="ico">🌏</span>BELONG</div>
+        </div>
+        <div class="mrz">
+          <div>P&lt;THAPRAEW&lt;&lt;T&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</div>
+          <div>TH2026&lt;0117&lt;THA&lt;&lt;<span class="g" id="mrz-gci">GCI&lt;042</span>&lt;&lt;STAMPS&lt;<span class="g" id="mrz-st">0</span>&lt;OF&lt;4&lt;&lt;&lt;&lt;&lt;&lt;</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- PASSPORT CARD -->
-  <div class="passport" id="passport">
-    <div class="p-head">
-      <div class="p-title">GLOBAL CITIZEN PASSPORT<small>ISSUED BY EF EDUCATION FIRST · Nº TH-2026-0117</small></div>
+  <!-- JOURNEY -->
+  <section id="journey">
+    <div class="reveal"><span class="eyebrow">The journey</span>
+      <h2>Four stages turn exposure into ability.</h2>
+      <p class="lead">Each stage earns a stamp — and moves the needle on skills no app can teach: <b>adaptability, empathy, resilience, confidence, belonging.</b></p>
     </div>
-    <div class="rule"></div>
-    <div class="holder">
-      <div class="avatar">P</div>
-      <div><b>Praew T.</b><span>19 · Bangkok, Thailand · Aspirant</span></div>
+    <div class="rail" id="rail">
+      <div class="st reveal" id="card0" style="--c:#38B6FF"><div class="dot">1</div>
+        <div class="card"><div class="top"><span class="s-name">SPARK</span>
+          <button class="btn" onclick="stamp(0)">Stamp it</button></div>
+          <div class="s-what"><b>The Global Citizen Challenge.</b> Take the free EF SET at your school, complete one real-world cultural task — and receive your physical Passport with its first stamp.</div>
+          <div class="s-meta">SKILL · curiosity &amp; self-assessment&nbsp;&nbsp;·&nbsp;&nbsp;KPI · EF SET starts</div>
+        </div></div>
+      <div class="st reveal" id="card1" style="--c:#5B8DEF"><div class="dot">2</div>
+        <div class="card"><div class="top"><span class="s-name">IMMERSE</span>
+          <button class="btn" onclick="stamp(1)">Stamp it</button></div>
+          <div class="s-what"><b>The real experience.</b> A language camp, long stay, or academic year at EF’s own campuses — GCI scored before and after. The part that can’t be downloaded.</div>
+          <div class="s-meta">SKILLS · all five, built for real&nbsp;&nbsp;·&nbsp;&nbsp;KPI · weeks, GCI delta</div>
+        </div></div>
+      <div class="st reveal" id="card2" style="--c:#8ED3FF"><div class="dot">3</div>
+        <div class="card"><div class="top"><span class="s-name">APPLY</span>
+          <button class="btn" onclick="stamp(2)">Stamp it</button></div>
+          <div class="s-what"><b>‘Bring It Home.’</b> A four-week micro-project back in Thailand — run an English activity, host an exchange — ending in a showcase. Evidence goes into the Passport.</div>
+          <div class="s-meta">SKILL · confident communication&nbsp;&nbsp;·&nbsp;&nbsp;KPI · completion</div>
+        </div></div>
+      <div class="st reveal" id="card3" style="--c:#E23744"><div class="dot">4</div>
+        <div class="card"><div class="top"><span class="s-name">BELONG</span>
+          <button class="btn" onclick="stamp(3)">Stamp it</button></div>
+          <div class="s-what"><b>EF Global Citizens — for life.</b> Mentor the next cohort, access scholarships and the career network, meet at the annual Bangkok summit. The journey never ends.</div>
+          <div class="s-meta">MINDSET · lifelong learning&nbsp;&nbsp;·&nbsp;&nbsp;KPI · engagement, referrals</div>
+        </div></div>
     </div>
-    <div class="gci-line">
-      <div>
-        <div class="lab">GLOBAL CITIZENSHIP INDEX</div>
-        <div class="gci-num"><span id="gci">42</span><small> / 100</small></div>
+  </section>
+
+  <!-- GCI -->
+  <section>
+    <div class="reveal"><span class="eyebrow">The measurement</span>
+      <h2>You can’t manage what you can’t measure.</h2>
+      <p class="lead">EF scores English with the EPI. The <b>Global Citizenship Index</b> does the same for global readiness — observable behaviours, scored pre and post.</p>
+    </div>
+    <div class="reveal">
+      <div class="skill"><div class="top"><span>Adaptability</span><span class="lvl" id="l0">L2 · EMERGING</span></div>
+        <div class="track"><div class="fill f1" id="b0" style="width:32%"></div></div>
+        <div class="ticks"><span>L1 NOVICE</span><span>L2</span><span>L3</span><span>L4 GLOBAL-READY</span></div></div>
+      <div class="skill"><div class="top"><span>Cultural awareness</span><span class="lvl" id="l1">L1 · NOVICE</span></div>
+        <div class="track"><div class="fill f2" id="b1" style="width:22%"></div></div></div>
+      <div class="skill"><div class="top"><span>Confident communication</span><span class="lvl" id="l2">L2 · EMERGING</span></div>
+        <div class="track"><div class="fill f3" id="b2" style="width:28%"></div></div></div>
+      <p class="scorenote" id="scorenote">● Baseline scored at SPARK — stamp the journey above to see growth.</p>
+    </div>
+  </section>
+
+  <!-- DOWNLOAD -->
+  <section>
+    <div class="reveal"><span class="eyebrow">Why it works</span>
+      <h2>Try downloading this.</h2>
+    </div>
+    <div class="reveal">
+      <div class="term" id="term">
+        <div class="term-bar"><i></i><i></i><i></i><span>experience_downloader v2.6</span></div>
+        <div class="term-body">
+          <div>⬇&nbsp; <span class="file" id="dlfile">osaka_market_smell.exp</span></div>
+          <div class="prog"><i id="dlbar"></i></div>
+          <div class="meta-line"><span id="dlpct">0%</span><span id="dlspeed">— MB/s</span></div>
+          <div class="failmsg" id="dlmsg"></div>
+          <div class="oknote">Apps teach the words. The world teaches the rest — reading a room, surviving a strange city, building trust across difference.</div>
+        </div>
       </div>
-      <div style="text-align:right;font-size:11px;color:#9FB6DE" id="gci-note">baseline · scored pre-departure</div>
+      <button class="btn-ghost" onclick="tryDownload()">⬇&nbsp;&nbsp;Download the experience</button>
     </div>
-    <div class="stamps">
-      <div class="stamp" id="st0"><span class="ico">⚡</span>SPARK</div>
-      <div class="stamp" id="st1"><span class="ico">✈️</span>IMMERSE</div>
-      <div class="stamp" id="st2"><span class="ico">🛠️</span>APPLY</div>
-      <div class="stamp" id="st3"><span class="ico">🌏</span>BELONG</div>
+  </section>
+
+  <!-- FLYWHEEL -->
+  <section>
+    <div class="reveal"><span class="eyebrow">The flywheel</span>
+      <h2>Every graduate powers the next.</h2>
+      <p class="lead">Alumni mentor and refer the next cohort — so acquiring each new student gets <b>cheaper as the community grows</b>. One trip becomes a trajectory; a customer becomes a member.</p>
     </div>
+    <div class="reveal">
+      <div class="orbitbox">
+        <div class="orbit-ring"></div>
+        <div class="onode n1"><i>🎓</i>Alumni advocate</div>
+        <div class="onode n2"><i>💬</i>Referrals arrive</div>
+        <div class="onode n3"><i>📉</i>Acquisition cost falls</div>
+        <div class="onode n4"><i>🌏</i>More global citizens</div>
+        <div class="orbit-center"><b>TRIP →<br>TRAJECTORY</b><span>THE EF FLYWHEEL</span></div>
+      </div>
+      <p class="orbit-cap">…and the loop repeats — each turn cheaper than the last.</p>
+    </div>
+  </section>
+
+  <!-- FINAL -->
+  <div class="final reveal">
+    <span class="eyebrow">EF · SCC 2026</span>
+    <h2>The world is the one classroom<br><span style="color:var(--cyan)">AI can’t render.</span></h2>
+    <p class="lead">From Trip to Trajectory — a strategy prototype for the EF Education First track, Thailand Social Case Competition 2026.</p>
+    <button class="cta" style="margin-top:26px" onclick="toast('Prototype — in production, this launches the free EF SET ✨')">Start with the free EF SET</button>
   </div>
 </div>
 
-<!-- JOURNEY -->
-<section id="journey">
-  <div class="inner">
-    <h2>The journey</h2>
-    <h3>Four stages turn exposure into ability.</h3>
-    <p class="lead">Each stage earns a stamp — and moves the needle on three skills no app can teach: adaptability, cultural awareness, and confident communication.</p>
-
-    <div class="stage s-1" id="card0">
-      <div class="s-top"><span class="s-name">1 · SPARK</span><button class="stampbtn" onclick="stamp(0)">Stamp it</button></div>
-      <div class="s-what"><b>The Global Citizen Challenge.</b> Take the free EF SET at your school, complete one real-world cultural task, and receive your physical Passport with its first stamp.</div>
-      <div class="s-skill">Skill unlocked: curiosity & self-assessment · KPI: EF SET starts</div>
-    </div>
-
-    <div class="stage s-2" id="card1">
-      <div class="s-top"><span class="s-name">2 · IMMERSE</span><button class="stampbtn" onclick="stamp(1)">Stamp it</button></div>
-      <div class="s-what"><b>The real experience.</b> A language camp, long stay, or academic year at EF’s own campuses — GCI scored before and after. This is the part that can’t be downloaded.</div>
-      <div class="s-skill">Skills built: all three, for real · KPI: weeks, GCI delta</div>
-    </div>
-
-    <div class="stage s-3" id="card2">
-      <div class="s-top"><span class="s-name">3 · APPLY</span><button class="stampbtn" onclick="stamp(2)">Stamp it</button></div>
-      <div class="s-what"><b>‘Bring It Home.’</b> A four-week micro-project back in Thailand — run an English activity, host a cultural exchange — ending in a showcase. Evidence goes into the Passport.</div>
-      <div class="s-skill">Skill cemented: confident communication · KPI: completion</div>
-    </div>
-
-    <div class="stage s-4" id="card3">
-      <div class="s-top"><span class="s-name">4 · BELONG</span><button class="stampbtn" onclick="stamp(3)">Stamp it</button></div>
-      <div class="s-what"><b>EF Global Citizens — for life.</b> Mentor the next cohort, access scholarships and the global career network, meet at the annual Bangkok summit. The journey never ends.</div>
-      <div class="s-skill">Mindset: lifelong learning · KPI: engagement, referrals</div>
-    </div>
-  </div>
-
-  <!-- GCI -->
-  <div class="inner">
-    <h2>The measurement</h2>
-    <h3>You can’t manage what you can’t measure.</h3>
-    <p class="lead">EF scores English with the EPI. The <b>Global Citizenship Index</b> does the same for global readiness — observable behaviours, scored pre and post.</p>
-
-    <div class="skillrow"><div class="top"><span>Adaptability</span><span class="lvl" id="l0">L2 · Emerging</span></div>
-      <div class="bar"><div class="fill f1" id="b0" style="width:32%"></div></div>
-      <div class="legend"><span>L1 NOVICE</span><span>L2</span><span>L3</span><span>L4 GLOBAL-READY</span></div></div>
-    <div class="skillrow"><div class="top"><span>Cultural awareness</span><span class="lvl" id="l1">L1 · Novice</span></div>
-      <div class="bar"><div class="fill f2" id="b1" style="width:22%"></div></div></div>
-    <div class="skillrow"><div class="top"><span>Confident communication</span><span class="lvl" id="l2">L2 · Emerging</span></div>
-      <div class="bar"><div class="fill f3" id="b2" style="width:28%"></div></div>
-      <div class="pre-note" id="scorenote">● Baseline scored at SPARK — stamp the journey above to see growth.</div></div>
-  </div>
-
-  <!-- DOWNLOAD FAILED -->
-  <div class="inner">
-    <h2>Why it works</h2>
-    <h3>Try downloading this.</h3>
-    <div class="dl">
-      <div>⬇ <span class="file" id="dlfile">osaka_market_smell.exp</span></div>
-      <div class="prog"><i id="dlbar"></i></div>
-      <div class="fail" id="dlmsg">​</div>
-      <div class="ok">Apps teach the words. The world teaches the rest — reading a room, surviving a strange city, building trust across difference.</div>
-    </div>
-    <button class="cta" style="margin-top:14px;width:100%" onclick="tryDownload()">Download the experience</button>
-  </div>
-
-  <!-- FLYWHEEL -->
-  <div class="inner" style="padding-bottom:36px">
-    <h2>The flywheel</h2>
-    <h3>Every graduate powers the next.</h3>
-    <p class="lead">Alumni mentor and refer the next cohort — so acquiring each new student gets cheaper as the community grows. One trip becomes a trajectory; a customer becomes a member.</p>
-    <div class="fly">
-      <span class="fnode">Alumni advocate</span><span class="farrow">→</span>
-      <span class="fnode">High-quality referrals</span><span class="farrow">→</span>
-      <span class="fnode">Lower acquisition cost</span><span class="farrow">→</span>
-      <span class="fnode">More global citizens</span><span class="farrow">↺</span>
-    </div>
-  </div>
-</section>
-
 <footer>
-  <b>From Trip to Trajectory</b> — a strategy prototype for the EF Education First track,<br>
-  Thailand Social Case Competition 2026.<br>
-  Illustrative demo · data & scoring for demonstration only · not an official EF product.
+  <b>GLOBAL CITIZEN PASSPORT</b> · interactive prototype<br>
+  Illustrative demo · data &amp; scoring for demonstration only · not an official EF product
 </footer>
 
-<div class="toast" id="toast">Stamp earned! ✓</div>
+<div class="toast" id="toastEl" role="status" aria-live="polite"></div>
 
 <script>
-  var done=[false,false,false,false];
-  var gci=42;
-  // per-stage effects: gci gain + bar widths + level labels
+  /* ---------- state ---------- */
+  var done=[false,false,false,false], gci=42, CIRC=264;
   var fx=[
-    {g:6,  b:[38,30,34], l:["L2 · Emerging","L2 · Emerging","L2 · Emerging"], note:"● SPARK scored — the journey begins."},
-    {g:22, b:[62,58,60], l:["L3 · Proficient","L3 · Proficient","L3 · Proficient"], note:"● Mid-journey scoring after IMMERSE."},
-    {g:8,  b:[72,66,78], l:["L3 · Proficient","L3 · Proficient","L4 · Global-ready"], note:"● APPLY evidence added to the Passport."},
-    {g:0,  b:[80,74,84], l:["L4 · Global-ready","L3+ · Proficient","L4 · Global-ready"], note:"○ Post-journey GCI: growth is proven, not promised."}
+    {g:6,  b:[38,30,34], l:["L2 · EMERGING","L2 · EMERGING","L2 · EMERGING"], note:"● SPARK scored — the journey begins."},
+    {g:22, b:[62,58,60], l:["L3 · PROFICIENT","L3 · PROFICIENT","L3 · PROFICIENT"], note:"● Re-scored after IMMERSE — this is the jump apps can’t give."},
+    {g:8,  b:[72,66,78], l:["L3 · PROFICIENT","L3 · PROFICIENT","L4 · GLOBAL-READY"], note:"● APPLY evidence added to the Passport."},
+    {g:8,  b:[80,74,84], l:["L4 · GLOBAL-READY","L3+ · PROFICIENT","L4 · GLOBAL-READY"], note:"○ Post-journey GCI — growth proven, not promised."}
   ];
+  var reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function stamp(i){
     if(done[i]) return;
-    // enforce order gently
-    for(var k=0;k<i;k++){ if(!done[k]){ toast("Start with stage "+(k+1)+" — the journey is a ladder!"); return; } }
+    for(var k=0;k<i;k++){ if(!done[k]){ toast("Start with stage "+(k+1)+" — the journey is a ladder"); return; } }
     done[i]=true;
+    var n=done.filter(Boolean).length;
     document.getElementById('st'+i).classList.add('done');
     document.getElementById('card'+i).classList.add('done');
-    var btn=document.querySelectorAll('.stampbtn')[i];
+    var btn=document.getElementById('card'+i).querySelector('.btn');
     btn.disabled=true; btn.textContent="Stamped ✓";
-    // animate GCI
-    var target=gci+fx[i].g; if(i===3){target=84;}
+    document.getElementById('rail').style.setProperty('--fill',(n/4*100)+"%");
+    var target=Math.min(gci+fx[i].g,84);
     animateGci(gci,target); gci=target;
     for(var j=0;j<3;j++){
       document.getElementById('b'+j).style.width=fx[i].b[j]+"%";
       document.getElementById('l'+j).textContent=fx[i].l[j];
     }
     document.getElementById('scorenote').textContent=fx[i].note;
-    if(i===1){document.getElementById('gci-note').textContent="re-scored after immersion";}
-    if(i===3){document.getElementById('gci-note').textContent="lifelong member · keeps growing";}
-    toast(i===3 ? "Journey complete — welcome to EF Global Citizens 🌏" : "Stamp earned! ✓");
-    if(i===3){ setTimeout(function(){document.getElementById('passport').scrollIntoView({behavior:'smooth',block:'center'});},600); }
+    document.getElementById('mrz-st').textContent=n;
+    if(navigator.vibrate && !reduced) navigator.vibrate(18);
+    ppFlash();
+    if(i===3){
+      document.getElementById('gci-note').innerHTML="Journey complete — <b>lifelong member</b>. The score keeps growing, because the relationship does.";
+      toast("Journey complete — welcome to EF Global Citizens 🌏");
+      confetti();
+      setTimeout(function(){document.getElementById('pp').scrollIntoView({behavior: reduced?'auto':'smooth',block:'center'});},700);
+    } else {
+      toast(["First stamp earned ⚡","IMMERSE stamped — the big jump ✈️","APPLY stamped — it sticks 🛠️"][i]);
+    }
   }
   function animateGci(from,to){
-    var el=document.getElementById('gci'); var t0=null;
-    function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/900,1);
-      el.textContent=Math.round(from+(to-from)*(1-Math.pow(1-p,3)));
+    var el=document.getElementById('gci'), ring=document.getElementById('ring'),
+        mrz=document.getElementById('mrz-gci'), t0=null;
+    function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/1000,1), e=1-Math.pow(1-p,3);
+      var v=Math.round(from+(to-from)*e);
+      el.textContent=v;
+      ring.style.strokeDashoffset=CIRC-(CIRC*v/100);
+      mrz.innerHTML="GCI&lt;0"+v;
       if(p<1)requestAnimationFrame(step); }
     requestAnimationFrame(step);
   }
+  /* initial ring */
+  document.getElementById('ring').style.strokeDashoffset=CIRC-(CIRC*42/100);
+
+  /* ---------- passport tilt + sheen ---------- */
+  var pp=document.getElementById('pp'), stage=pp.parentElement;
+  if(!reduced && matchMedia('(hover:hover)').matches){
+    stage.addEventListener('pointermove',function(e){
+      var r=stage.getBoundingClientRect(),
+          x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+      pp.style.transform="rotateY("+(x*10)+"deg) rotateX("+(-y*8)+"deg)";
+    });
+    stage.addEventListener('pointerleave',function(){ pp.style.transform="none"; });
+  }
+  function ppFlash(){ pp.classList.remove('lit'); void pp.offsetWidth; pp.classList.add('lit'); }
+  setTimeout(ppFlash,1200);
+
+  /* ---------- reveals ---------- */
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target);} });
+    },{threshold:.14});
+    document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+  } else { document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); }); }
+
+  /* ---------- toast ---------- */
   var toastTimer=null;
   function toast(msg){
-    var t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
-    clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show');},2200);
+    var t=document.getElementById('toastEl'); t.textContent=msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer=setTimeout(function(){t.classList.remove('show');},2400);
   }
-  var files=["osaka_market_smell.exp","first_conversation_in_french.exp","getting_lost_then_found.exp","homestay_family_dinner.exp"];
+
+  /* ---------- confetti ---------- */
+  function confetti(){
+    if(reduced) return;
+    var colors=['#38B6FF','#E23744','#D4AF6A','#ffffff','#5B8DEF'];
+    for(var i=0;i<30;i++){
+      var c=document.createElement('div'); c.className='confetti';
+      c.style.left=(Math.random()*100)+'vw';
+      c.style.background=colors[i%colors.length];
+      c.style.animationDuration=(1.6+Math.random()*1.4)+'s';
+      c.style.animationDelay=(Math.random()*.5)+'s';
+      c.style.width=(6+Math.random()*6)+'px';
+      c.style.height=(10+Math.random()*8)+'px';
+      document.body.appendChild(c);
+      (function(el){ setTimeout(function(){ el.remove(); },3600); })(c);
+    }
+  }
+
+  /* ---------- download fail ---------- */
+  var files=["osaka_market_smell.exp","first_conversation_in_french.exp","getting_lost_then_found.exp","homestay_family_dinner.exp","courage_to_ask_directions.exp"];
   var fidx=0, dling=false;
   function tryDownload(){
     if(dling) return; dling=true;
-    var bar=document.getElementById('dlbar'), msg=document.getElementById('dlmsg');
-    msg.textContent="​"; bar.style.transition="width 1.4s ease"; bar.style.width="86%";
-    setTimeout(function(){
-      bar.style.transition="width .15s"; bar.style.width="0%";
-      msg.textContent="Download failed — only available in person.";
-      fidx=(fidx+1)%files.length; document.getElementById('dlfile').textContent=files[fidx];
-      dling=false;
-    },1500);
+    var bar=document.getElementById('dlbar'), msg=document.getElementById('dlmsg'),
+        pct=document.getElementById('dlpct'), spd=document.getElementById('dlspeed'),
+        term=document.getElementById('term'), p=0;
+    msg.textContent=""; bar.style.width="0%"; term.classList.remove('shake');
+    var iv=setInterval(function(){
+      p+=Math.random()*14;
+      if(p>=86){
+        clearInterval(iv);
+        pct.textContent="86%"; bar.style.width="86%"; spd.textContent="0.0 MB/s";
+        setTimeout(function(){
+          bar.style.width="0%"; pct.textContent="0%"; spd.textContent="— MB/s";
+          msg.textContent="✕ Download failed — only available in person.";
+          term.classList.add('shake');
+          if(navigator.vibrate && !reduced) navigator.vibrate([30,40,30]);
+          fidx=(fidx+1)%files.length;
+          document.getElementById('dlfile').textContent=files[fidx];
+          dling=false;
+        },700);
+      } else {
+        pct.textContent=Math.round(p)+"%"; bar.style.width=p+"%";
+        spd.textContent=(4+Math.random()*8).toFixed(1)+" MB/s";
+      }
+    },140);
   }
 </script>
 </body>
